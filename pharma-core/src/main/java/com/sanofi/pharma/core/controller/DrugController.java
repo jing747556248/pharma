@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,10 +25,10 @@ public class DrugController {
     private DrugService drugService;
 
     @Schema(description = "根据药房id查询药品列表")
-    @GetMapping("/listByPharmacyId")
-    public RespBody<List<DrugInPharmacyVO>> listByPharmacyId(@RequestParam Long pharmacyId,
-                                                             @RequestParam Integer pageNum,
-                                                             @RequestParam Integer pageSize) {
+    @GetMapping("/pharmacy/{pharmacyId}")
+    public RespBody<List<DrugInPharmacyVO>> listByPharmacyId(@PathVariable Long pharmacyId,
+                                                             @RequestParam(defaultValue = "1") Integer pageNum,
+                                                             @RequestParam(defaultValue = "10") Integer pageSize) {
         return RespBody.ok(drugService.listByPharmacyId(pharmacyId, pageNum, pageSize));
     }
 }
