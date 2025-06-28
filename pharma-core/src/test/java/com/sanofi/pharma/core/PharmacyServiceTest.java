@@ -2,6 +2,7 @@ package com.sanofi.pharma.core;
 
 import com.sanofi.pharma.core.repository.PharmacyRepository;
 import com.sanofi.pharma.core.service.DrugService;
+import com.sanofi.pharma.core.service.PharmacyService;
 import com.sanofi.pharma.core.vo.DrugInPharmacyVO;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PharmacyServiceTest extends ElideTestBase {
 
     @Resource
-    private DrugService drugService;
+    private PharmacyService pharmacyService;
 
     @Resource
     private PharmacyRepository pharmacyRepository;
@@ -30,9 +31,9 @@ public class PharmacyServiceTest extends ElideTestBase {
      * 根据药房id查询药品列表
      */
     @Test
-    void listByPharmacyIdTest() {
+    void getDrugsByPharmacyIdTest() {
         assertThat(pharmacyRepository.findById(1L)).isPresent(); // 确保数据存在
-        List<DrugInPharmacyVO> drugInPharmacyVOS = drugService.listByPharmacyId(1L, 1, 10);
+        List<DrugInPharmacyVO> drugInPharmacyVOS = pharmacyService.getDrugsByPharmacyId(1L, 1, 10);
         Assertions.assertEquals(Boolean.TRUE, drugInPharmacyVOS.size() >= 0);
     }
 

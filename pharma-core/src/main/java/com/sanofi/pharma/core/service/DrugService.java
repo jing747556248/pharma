@@ -1,9 +1,6 @@
 package com.sanofi.pharma.core.service;
 
 
-import com.sanofi.pharma.core.vo.DrugInPharmacyVO;
-
-import java.util.List;
 
 /**
  * 药品信息服务类
@@ -13,5 +10,4 @@ import java.util.List;
  */
 public interface DrugService {
 
-    List<DrugInPharmacyVO> listByPharmacyId(Long pharmacyId, Integer pageNum, Integer pageSize);
 }

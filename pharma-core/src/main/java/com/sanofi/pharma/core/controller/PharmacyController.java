@@ -2,11 +2,9 @@ package com.sanofi.pharma.core.controller;
 
 import com.sanofi.pharma.common.dto.RespBody;
 import com.sanofi.pharma.core.service.DrugService;
+import com.sanofi.pharma.core.service.PharmacyService;
 import com.sanofi.pharma.core.vo.DrugInPharmacyVO;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +14,19 @@ import java.util.List;
  * @author lijin
  * @since 2025-06-16
  */
-@Schema(description = "药品管理")
-@RequestMapping("/api/drug")
+@Schema(description = "药房管理")
+@RequestMapping("/api/pharmacy")
 @RestController
-public class DrugController {
+public class PharmacyController {
 
     @Resource
-    private DrugService drugService;
+    private PharmacyService pharmacyService;
 
     @Schema(description = "根据药房id查询药品列表")
-    @GetMapping("/pharmacy/{pharmacyId}")
-    public RespBody<List<DrugInPharmacyVO>> listByPharmacyId(@PathVariable Long pharmacyId,
+    @GetMapping("/{pharmacyId}/drugs")
+    public RespBody<List<DrugInPharmacyVO>> getDrugsByPharmacyId(@PathVariable Long pharmacyId,
                                                              @RequestParam(defaultValue = "1") Integer pageNum,
                                                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        return RespBody.ok(drugService.listByPharmacyId(pharmacyId, pageNum, pageSize));
+        return RespBody.ok(pharmacyService.getDrugsByPharmacyId(pharmacyId, pageNum, pageSize));
     }
 }
