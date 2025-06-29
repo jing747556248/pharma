@@ -89,7 +89,7 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
      */
     @Retryable(
             value = OptimisticLockException.class,
-            maxAttempts = 5, // 最多重试五次
+            maxAttempts = 3, // 最多重试次数
             backoff = @Backoff(delay = 500) // 延迟500ms后重试
     )
     @Override
@@ -170,11 +170,15 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
         if (prescriptionOptional.isEmpty()) {
             log.info("create prescription exception: 处方不存在");
+            // 记录审计日志
+            applicationEventPublisher.publishEvent(new PrescriptionEvent(this, null, null, RespCode.PRESCRIPTION_NOT_EXIST.getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
             throw new BizException(RespCode.PRESCRIPTION_NOT_EXIST);
         }
         Prescription prescription = prescriptionOptional.get();
         if (!prescription.getStatus().equals(PrescriptionStatusEnum.NOT_FULFILL.getCode())) {
             log.info("create prescription exception: 处方已经执行过了");
+            // 记录审计日志
+            applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, null, RespCode.PRESCRIPTION_HAS_BEEN_FULFILLED.getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
             throw new BizException(RespCode.PRESCRIPTION_HAS_BEEN_FULFILLED);
         }
         return prescription;
@@ -235,6 +239,9 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
     @Recover
     public Boolean recoverAfterFulfillPrescriptionFail(OptimisticLockException e, FulfillPrescriptionRequestDTO request) {
         log.error("乐观锁重试5次后仍失败，request: {}", request);
+        // 记录审计日志
+        Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
+        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), null, "系统繁忙，多次尝试扣减药房库存失败", PrescriptionEventTypeEnum.CREATE.toString()));
         throw new BizException(RespCode.SYSTEM_BUSY);
     }
 }

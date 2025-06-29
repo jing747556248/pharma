@@ -1,7 +1,6 @@
 package com.sanofi.pharma.core;
 
 import com.sanofi.pharma.core.repository.PharmacyRepository;
-import com.sanofi.pharma.core.service.DrugService;
 import com.sanofi.pharma.core.service.PharmacyService;
 import com.sanofi.pharma.core.vo.DrugInPharmacyVO;
 import jakarta.annotation.Resource;

@@ -1,7 +1,6 @@
 package com.sanofi.pharma.core.controller;
 
 import com.sanofi.pharma.common.dto.RespBody;
-import com.sanofi.pharma.core.service.DrugService;
 import com.sanofi.pharma.core.service.PharmacyService;
 import com.sanofi.pharma.core.vo.DrugInPharmacyVO;
 import io.swagger.v3.oas.annotations.media.Schema;
