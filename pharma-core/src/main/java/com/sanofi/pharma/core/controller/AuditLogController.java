@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2025-06-16
  */
 @Schema(description = "审计日志")
-@RequestMapping("/api/auditLog")
+@RequestMapping("/api/audit-log")
 @RestController
 public class AuditLogController {
 
