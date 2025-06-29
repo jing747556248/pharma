@@ -8,6 +8,7 @@ import com.sanofi.pharma.core.enums.PrescriptionStatusEnum;
 import com.sanofi.pharma.core.repository.AuditLogRepository;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -83,10 +84,14 @@ public class PrescriptionEventListener implements ApplicationListener<Prescripti
      */
     private void processFulfillFailEvent(Prescription prescription, List<PrescriptionItem> prescriptionItemList, String failureReason) {
         AuditLog auditLog = new AuditLog();
-        auditLog.setPrescriptionId(prescription.getId());
-        auditLog.setPatientId(prescription.getPatientId());
-        auditLog.setPharmacyId(prescription.getPharmacyId());
-        auditLog.setRequiredDrugs(JSON.toJSONString(prescriptionItemList));
+        if (prescription != null) {
+            auditLog.setPrescriptionId(prescription.getId());
+            auditLog.setPatientId(prescription.getPatientId());
+            auditLog.setPharmacyId(prescription.getPharmacyId());
+        }
+        if (CollectionUtils.isNotEmpty(prescriptionItemList)) {
+            auditLog.setRequiredDrugs(JSON.toJSONString(prescriptionItemList));
+        }
         auditLog.setDispensedStatus(PrescriptionStatusEnum.FULFILL_FAIL.getCode());
         auditLog.setFailureReason(failureReason);
         auditLog.setCreateBy("admin");
