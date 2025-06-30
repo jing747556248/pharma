@@ -72,7 +72,10 @@ public enum RespCode {
     PRESCRIPTION_DRUG_NOT_EXIST("10002", "Prescription Drug Not Exist Exception", "药房没有处方中的药品"),
     PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH("10003", "Prescription Drug Quantity Not Enough Exception", "药房的药品库存不足"),
     PRESCRIPTION_NOT_EXIST("10004", "Prescription Not Exist Exception", "处方不存在"),
-    PRESCRIPTION_HAS_BEEN_FULFILLED("10005", "Prescription Has Been Fulfilled Exception", "处方已经执行过了");
+    PRESCRIPTION_HAS_BEEN_FULFILLED("10005", "Prescription Has Been Fulfilled Exception", "处方已经执行过了"),
+    DRUG_NOT_EXIST("10006", "Drug Not Exist Exception", "药品不存在"),
+    DRUG_HAS_EXPIRED("10007", "Drug Has Expiry Exception", "药品过了有效期"),
+    PHARMACY_NOT_EXIST("10008", "Pharmacy Not Exist Exception", "药房不存在");
 
     /**
      * 自定义 返回码

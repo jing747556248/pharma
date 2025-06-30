@@ -1,7 +1,6 @@
 package com.sanofi.pharma.core.entity;
 
 import com.yahoo.elide.annotation.Include;
-import com.yahoo.elide.graphql.annotation.GraphQLDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,6 +20,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Include(name = "pharmacyDrugRelationship")
+//@CreatePermission(expression = PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
 @Schema(description = "药房-药品关联表")
 public class PharmacyDrugRelationship extends EntityBase implements Serializable {
 

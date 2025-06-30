@@ -60,20 +60,12 @@ public class Drug extends EntityBase implements Serializable {
     /**
      * 生产日期
      */
-//    @JsonFormat(pattern = "yyyy-MM-dd")
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    @Temporal(grains = {@TimeGrainDefinition(grain = TimeGrain.DAY, expression = "yyyy-MM-dd")}, timeZone = "UTC")
-//    @DimensionFormula("FORMATDATETIME({{$productionDate}}, 'yyyy-MM-dd')")
     @Schema(description = "生产日期")
     private String productionDate;
 
     /**
      * 有效期至
      */
-//    @JsonFormat(pattern = "yyyy-MM-dd")
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    @Temporal(grains = {@TimeGrainDefinition(grain = TimeGrain.DAY, expression = "yyyy-MM-dd")}, timeZone = "UTC")
-//    @DimensionFormula("FORMATDATETIME({{$expiryDate}}, 'yyyy-MM-dd')")
     @Schema(description = "有效期至")
     private String expiryDate;
 
