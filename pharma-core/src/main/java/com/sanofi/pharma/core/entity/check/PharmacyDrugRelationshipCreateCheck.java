@@ -12,17 +12,27 @@ import com.yahoo.elide.annotation.SecurityCheck;
 import com.yahoo.elide.core.security.ChangeSpec;
 import com.yahoo.elide.core.security.RequestScope;
 import com.yahoo.elide.core.security.checks.OperationCheck;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
+@Component
 //@SecurityCheck(PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
 @RequiredArgsConstructor
 public class PharmacyDrugRelationshipCreateCheck extends OperationCheck<PharmacyDrugRelationship> {
 
-    private final DrugRepository drugRepository;
+    @Resource
+    @Lazy
+    private DrugRepository drugRepository;
+
+    @Resource
+    @Lazy
     private final PharmacyRepository pharmacyRepository;
 
     public static final String CREATE_CHECK = "CREATE_CHECK";

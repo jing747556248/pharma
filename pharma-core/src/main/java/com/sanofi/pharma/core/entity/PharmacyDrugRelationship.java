@@ -1,5 +1,7 @@
 package com.sanofi.pharma.core.entity;
 
+import com.sanofi.pharma.core.entity.check.PharmacyDrugRelationshipCreateCheck;
+import com.yahoo.elide.annotation.CreatePermission;
 import com.yahoo.elide.annotation.Include;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
