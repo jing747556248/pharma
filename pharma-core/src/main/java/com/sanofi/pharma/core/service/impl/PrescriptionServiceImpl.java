@@ -88,7 +88,8 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
      * 执行处方
      */
     @Retryable(
-            value = OptimisticLockException.class,
+            retryFor = {OptimisticLockException.class},
+            noRetryFor = {BizException.class},
             maxAttempts = 3, // 最多重试次数
             backoff = @Backoff(delay = 500) // 延迟500ms后重试
     )
@@ -170,15 +171,11 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
         if (prescriptionOptional.isEmpty()) {
             log.info("create prescription exception: 处方不存在");
-            // 记录审计日志
-            applicationEventPublisher.publishEvent(new PrescriptionEvent(this, null, null, RespCode.PRESCRIPTION_NOT_EXIST.getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
             throw new BizException(RespCode.PRESCRIPTION_NOT_EXIST);
         }
         Prescription prescription = prescriptionOptional.get();
         if (!prescription.getStatus().equals(PrescriptionStatusEnum.NOT_FULFILL.getCode())) {
             log.info("create prescription exception: 处方已经执行过了");
-            // 记录审计日志
-            applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, null, RespCode.PRESCRIPTION_HAS_BEEN_FULFILLED.getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
             throw new BizException(RespCode.PRESCRIPTION_HAS_BEEN_FULFILLED);
         }
         return prescription;
@@ -241,7 +238,17 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         log.error("乐观锁重试5次后仍失败，request: {}", request);
         // 记录审计日志
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
-        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), null, "系统繁忙，多次尝试扣减药房库存失败", PrescriptionEventTypeEnum.CREATE.toString()));
+        List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescriptionOptional.isPresent() ? prescriptionOptional.get().getId() : -1, false);
+        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), prescriptionItemList, "系统繁忙，多次尝试扣减药房库存失败", PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
         throw new BizException(RespCode.SYSTEM_BUSY);
+    }
+
+    @Recover
+    public Boolean recoverAfterFulfillPrescriptionFail(BizException e, FulfillPrescriptionRequestDTO request) {
+        // 记录审计日志
+        Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
+        List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescriptionOptional.isPresent() ? prescriptionOptional.get().getId() : -1, false);
+        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), prescriptionItemList, e.getRespCode().getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
+        throw e;
     }
 }

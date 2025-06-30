@@ -47,7 +47,7 @@ public class PrescriptionServiceTest extends ElideTestBase {
     }
 
     /**
-     * 执行处方
+     * 执行处方--并发执行
      */
     @Test
     public void fulfillPrescriptionTest() throws InterruptedException {
@@ -62,9 +62,9 @@ public class PrescriptionServiceTest extends ElideTestBase {
             new Thread(() -> {
                 try {
                     startLatch.await();
+                    counter.incrementAndGet(); // 该处方执行的次数
                     // 执行被测试方法
                     prescriptionService.fulfillPrescription(dto);
-                    counter.incrementAndGet(); // 该处方执行的次数
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 } finally {
@@ -75,5 +75,16 @@ public class PrescriptionServiceTest extends ElideTestBase {
         startLatch.countDown();
         endLatch.await(); // 所有线程执行完成后 主线程继续执行
         assertEquals(THREAD_COUNT, counter.get()); // 验证结果
+    }
+
+    /**
+     * 处方执行-单条执行
+     */
+    @Test
+    public void fulfillTest() {
+        // 业务方法参数
+        FulfillPrescriptionRequestDTO dto = new FulfillPrescriptionRequestDTO();
+        dto.setPrescriptionId(5L);
+        prescriptionService.fulfillPrescription(dto);
     }
 }
