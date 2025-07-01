@@ -96,17 +96,17 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
     @Override
     @Transactional
     public Boolean fulfillPrescription(FulfillPrescriptionRequestDTO request) {
-        // 校验处方是否存在 以及状态 check parma
+        // check parma
         Prescription prescription = this.checkParam(request);
 
-        // 扣减库存，更新处方状态 乐观锁  Deducting stock, updating prescription status with optimistic lock
+        // Deducting stock, updating prescription status with optimistic lock
         List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescription.getId(), false);
         List<PharmacyDrugRelationship> pharmacyDrugRelationshipList = new ArrayList<>();
         boolean isEnough = true;
         for (PrescriptionItem prescriptionItem : prescriptionItemList) {
-            // 查药房中该药品 query the drug in the pharmacy
+            // query the drug in the pharmacy
             PharmacyDrugRelationship pharmacyDrugRelationship = pharmacyDrugRelationshipRepository.findByPharmacyIdAndDrugId(prescription.getPharmacyId(), prescriptionItem.getDrugId());
-            // 判断库存是否够 determine if the stock is enough
+            // determine if the stock is enough
             if (pharmacyDrugRelationship.getStock() < prescriptionItem.getQuantity()) {
                 isEnough = false;
                 break;
@@ -117,17 +117,18 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         }
 
         if (isEnough) {
-            // 批量更新药房库存 batch update pharmacy stock
+            // batch update pharmacy stock
             this.batchUpdateStock(pharmacyDrugRelationshipList);
 
-            // 更新处方状态 update prescription status
+            // update prescription status
             prescription.setStatus(PrescriptionStatusEnum.FULFILL_SUCCESS.getCode());
+            prescription.setUpdateTime(new Date());
             prescriptionRepository.save(prescription);
 
-            // 记录审计日志 record audit log
+            // record audit log
             applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, prescriptionItemList, "", PrescriptionEventTypeEnum.FULFILL_SUCCESS.toString()));
         } else {
-            // 记录审计日志 record audit log
+            // record audit log
             applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, prescriptionItemList, RespCode.PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH.getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
             throw new BizException(RespCode.PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH);
         }
@@ -140,17 +141,17 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
     }
 
     /**
-     * 创建处方参数校验 check param for creating prescription
+     * check param for creating prescription
      */
     private void checkParam(PrescriptionDTO request) {
         log.info("create prescription request: {}", JSON.toJSONString(request));
-        // 校验处方中是否包含药品 Prescription Drug List is Empty
+        // Prescription Drug List is Empty
         if (CollectionUtils.isEmpty(request.getItemDTOList())) {
             log.info("create prescription exception: 处方中没有药品");
             throw new BizException(RespCode.PRESCRIPTION_DRUG_LIST_EMPTY);
         }
         // 校验处方中药品是否充足 Verify whether the drugs in the prescription are sufficient
-        for (PrescriptionItemDTO itemDTO : request.getItemDTOList()) {
+        request.getItemDTOList().forEach(itemDTO -> {
             PharmacyDrugRelationship pharmacyDrugRelationship = pharmacyDrugRelationshipRepository.findByPharmacyIdAndDrugId(request.getPharmacyId(), itemDTO.getDrugId());
             if (pharmacyDrugRelationship == null) {
                 log.info("create prescription exception: 药房没有处方中的药品");
@@ -161,11 +162,11 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
                 log.info("create prescription exception: 药房的药品库存量不足");
                 throw new BizException(RespCode.PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH);
             }
-        }
+        });
     }
 
     /**
-     * 执行处方参数校验 check param for fulfilling prescription
+     * check param for fulfilling prescription
      */
     private Prescription checkParam(FulfillPrescriptionRequestDTO request) {
         log.info("fulfill prescription request: {}", JSON.toJSONString(request));
@@ -197,7 +198,7 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
 
     private List<PrescriptionItem> buildPrescriptionItemList(PrescriptionDTO request, Long prescriptionId) {
         List<PrescriptionItem> prescriptionItemList = new ArrayList<>();
-        for (PrescriptionItemDTO itemDTO : request.getItemDTOList()) {
+        request.getItemDTOList().forEach(itemDTO -> {
             PrescriptionItem prescriptionItem = new PrescriptionItem();
             prescriptionItem.setPrescriptionId(prescriptionId);
             prescriptionItem.setDrugId(itemDTO.getDrugId());
@@ -209,7 +210,7 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
             prescriptionItem.setUpdateTime(new Date());
             prescriptionItem.setIsDeleted(false);
             prescriptionItemList.add(prescriptionItem);
-        }
+        });
         return prescriptionItemList;
     }
 
@@ -219,13 +220,13 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         StringBuilder sqlBuilder = new StringBuilder(
                 "UPDATE pharmacy_drug_relationship SET stock = CASE id "
         );
-        for (PharmacyDrugRelationship pharmacyDrugRelationship : pharmacyDrugRelationshipList) {
+        pharmacyDrugRelationshipList.forEach(pharmacyDrugRelationship -> {
             sqlBuilder.append("WHEN ")
                     .append(pharmacyDrugRelationship.getId())
                     .append(" THEN ")
                     .append(pharmacyDrugRelationship.getStock())
                     .append(" ");
-        }
+        });
         sqlBuilder.append("END WHERE id IN :ids");
 
         // 执行更新
@@ -237,7 +238,7 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
     @Recover
     public Boolean recoverAfterFulfillPrescriptionFail(OptimisticLockException e, FulfillPrescriptionRequestDTO request) {
         log.error("乐观锁重试5次后仍失败，request: {}", request);
-        // 记录审计日志
+        // record audit log
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
         List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescriptionOptional.isPresent() ? prescriptionOptional.get().getId() : -1, false);
         applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), prescriptionItemList, "系统繁忙，多次尝试扣减药房库存失败", PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
@@ -246,7 +247,7 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
 
     @Recover
     public Boolean recoverAfterFulfillPrescriptionFail(BizException e, FulfillPrescriptionRequestDTO request) {
-        // 记录审计日志
+        // record audit log
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
         List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescriptionOptional.isPresent() ? prescriptionOptional.get().getId() : -1, false);
         applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), prescriptionItemList, e.getRespCode().getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
