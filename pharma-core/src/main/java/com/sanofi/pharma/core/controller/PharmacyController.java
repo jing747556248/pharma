@@ -13,7 +13,7 @@ import java.util.List;
  * @author lijin
  * @since 2025-06-16
  */
-@Schema(description = "药房管理")
+@Schema(description = "pharmacy controller")
 @RequestMapping("/api/pharmacy")
 @RestController
 public class PharmacyController {
@@ -21,7 +21,7 @@ public class PharmacyController {
     @Resource
     private PharmacyService pharmacyService;
 
-    @Schema(description = "根据药房id查询药品列表")
+    @Schema(description = "query drugs list by pharmacy id")
     @GetMapping("/{pharmacyId}/drugs")
     public RespBody<List<DrugInPharmacyVO>> getDrugsByPharmacyId(@PathVariable Long pharmacyId,
                                                              @RequestParam(defaultValue = "1") Integer pageNum,

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lijin
  * @since 2025-06-16
  */
-@Schema(description = "审计日志")
+@Schema(description = "audit log controller")
 @RequestMapping("/api/audit-log")
 @RestController
 public class AuditLogController {
@@ -23,7 +23,7 @@ public class AuditLogController {
     @Resource
     private AuditLogService auditLogService;
 
-    @Schema(description = "审计日志列表")
+    @Schema(description = "query audit log list")
     @GetMapping
     public RespBody<Page<AuditLog>> queryAuditLog(
             @RequestParam(required = false) Long patientId,

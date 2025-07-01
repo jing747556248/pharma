@@ -38,16 +38,16 @@ public class PharmacyDrugRelationshipCreateCheck extends OperationCheck<Pharmacy
 
     @Override
     public boolean ok(PharmacyDrugRelationship relationship, RequestScope requestScope, Optional<ChangeSpec> changeSpec) {
-        // 参数不能为空
+        // 参数不能为空 Parameter cannot be empty
         if (relationship.getPharmacyId() == null || relationship.getDrugId() == null) {
             throw new BizException(RespCode.PARAM_CAN_NOT_BE_NULL);
         }
-        // 检查药品是否存在
+        // 检查药品是否存在 Check if the drug is present
         Optional<Drug> drugOptional = drugRepository.findById(relationship.getDrugId());
         if (drugOptional.isEmpty()) {
             throw new BizException(RespCode.DRUG_NOT_EXIST);
         }
-        // 检查药品expiryDate
+        // 检查药品expiryDate Check the drug expiration date
         Drug drug = drugOptional.get();
         LocalDate now = LocalDate.now();
         Date expiryDate = DateUtil.stringToDate(drug.getExpiryDate(), DateUtil.DATE_FORMAT_YEAR_MONTH_DAY2);
@@ -55,7 +55,7 @@ public class PharmacyDrugRelationshipCreateCheck extends OperationCheck<Pharmacy
         if (now.isAfter(expiryLocalDate)) {
             throw new BizException(RespCode.DRUG_HAS_EXPIRED);
         }
-        // 检查药房是否存在
+        // 检查药房是否存在 Check if the pharmacy exists
         Optional<Pharmacy> pharmacyOptional = pharmacyRepository.findById(relationship.getPharmacyId());
         if (pharmacyOptional.isEmpty()) {
             throw new BizException(RespCode.PHARMACY_NOT_EXIST);

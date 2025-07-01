@@ -6,15 +6,15 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@Schema(description = "创建处方明细入参")
+@Schema(description = "create prescription item request param")
 public class PrescriptionItemDTO implements Serializable {
 
-    @Schema(description = "药品ID")
+    @Schema(description = "drug id")
     private Long drugId;
 
-    @Schema(description = "数量")
+    @Schema(description = "quantity")
     private Integer quantity;
 
-    @Schema(description = "用法用量(如:每日2次,每次1片)")
+    @Schema(description = "Usage and dosage (e.g. 1 tablet, 2 times a day)")
     private String dosage;
 }

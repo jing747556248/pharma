@@ -8,17 +8,17 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Schema(description = "创建处方入参")
+@Schema(description = "create prescription request param")
 public class PrescriptionDTO implements Serializable {
 
-    @Schema(description = "所属药房ID")
-    @NotNull(message = "药房ID不能为空")
+    @Schema(description = "pharmacy id")
+    @NotNull(message = "pharmacy id cannot be null")
     private Long pharmacyId;
 
-    @Schema(description = "患者id")
-    @NotNull(message = "患者ID不能为空")
+    @Schema(description = "patient id")
+    @NotNull(message = "patient id cannot be null")
     private Long patientId;
 
-    @Schema(description = "药品明细")
+    @Schema(description = "drug item list")
     private List<PrescriptionItemDTO> itemDTOList;
 }

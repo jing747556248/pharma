@@ -20,7 +20,7 @@ public class PrescriptionEvent extends ApplicationEvent {
 
     private final List<PrescriptionItem> prescriptionItemList;
 
-    // 失败原因
+    // failure reason
     private final String failureReason;
 
     private final String eventType;

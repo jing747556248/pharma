@@ -10,29 +10,29 @@ import java.io.Serializable;
  * @author lijin
  * @since 2025-06-16
  */
-@Schema(description = "药房的合同药")
+@Schema(description = "Pharmacy's contracted drugs")
 @Data
 public class DrugInPharmacyVO implements Serializable {
 
-    @Schema(description = "药品ID")
+    @Schema(description = "drug id")
     private Long drugId;
 
-    @Schema(description = "该药房库存量")
+    @Schema(description = "stock")
     private Integer stock;
 
-    @Schema(description = "药物名称")
+    @Schema(description = "drug name")
     private String name;
 
-    @Schema(description = "制造商")
+    @Schema(description = "manufacturer")
     private String manufacturer;
 
-    @Schema(description = "批号")
+    @Schema(description = "batch number")
     private String batchNumber;
 
-    @Schema(description = "生产日期")
+    @Schema(description = "production date")
     private String productionDate;
 
-    @Schema(description = "有效期至")
+    @Schema(description = "expiry date")
     private String expiryDate;
 
 }

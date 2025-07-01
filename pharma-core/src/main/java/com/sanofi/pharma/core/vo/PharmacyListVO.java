@@ -9,23 +9,23 @@ import java.io.Serializable;
  * @author lijin
  * @since 2025-06-16
  */
-@Schema(description = "药房视图对象")
+@Schema(description = "pharmacy vo object")
 @Data
 public class PharmacyListVO implements Serializable {
 
-    @Schema(description = "主键ID")
+    @Schema(description = "id")
     private Long id;
 
-    @Schema(description = "药房名称")
+    @Schema(description = "pharmacy name")
     private String name;
 
-    @Schema(description = "详细地址")
+    @Schema(description = "location")
     private String location;
 
-    @Schema(description = "联系电话")
+    @Schema(description = "contact phone")
     private String contactPhone;
 
-    @Schema(description = "营业时间")
+    @Schema(description = "business hours")
     private String businessHours;
 
 

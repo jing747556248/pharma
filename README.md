@@ -1,31 +1,32 @@
-一、Overview：简介
-本系统是一个药品供应链及处方执行的系统。主要包含药品管理、患者管理、药房管理、药房药品分配、处方创建和执行流程等
+1、 Overview: Introduction
+This system is a pharmaceutical supply chain and prescription execution system. Mainly includes drug management, 
+patient management, pharmacy management, pharmacy drug distribution, prescription creation and execution process, etc
 
-二、Features：核心功能
-1, 患者信息管理：新增患者，更新患者，删除患者，查询患者
-2, 药品信息管理：
-3, 药房信息管理：
-4, 给药房分配药品：
-5, 处方流程管理：
-6, 审计日志：记录每一次处方创建、处方执行的日志信息，以及检索日志
+2、 Features: Core Features
+2.1 Patient information management: adding patients, updating patients, deleting patients, and querying patients
+2.2 Drug information management: adding drugs, updating drugs, deleting drugs, and querying drugs
+2.3 Pharmacy information management: adding pharmacies, updating pharmacies, deleting pharmacies, and querying pharmacies
+2.4 Distribution of drugs to pharmacies
+2.5 Prescription process management: Create and fulfill prescriptions
+2.6 Audit log: Record the log information of each prescription creation, prescription execution, and retrieval log
 
-三、Installation：安装说明
-1, JDK17+  Maven3.6+  Mysql8.0+(推荐Mysql9.3)  Git
-2, 克隆项目： git clone https://github.com/jing747556248/pharma.git
-3, 构建项目： mvn clean install
-4, 初始化数据库：执行数据库初始化sql文件-pharma-core/src/main/resources/sql/pharma-init.sql, 
-修改application.yaml中数据库连接信息为自己的
-5, 运行项目：项目为springboot项目，通过IDE导入项目运行 
-或者将项目打成jar包， 命令行运行： java -jar {your_target_directory}\pharma-core-1.0.0.jar
+3、 Installation: Installation Instructions
+3.1 JDK17+Maven3.6+Mysql8.0+(recommended Mysql9.3) Git
+3.2 Cloning project: git clone https://github.com/jing747556248/pharma.git
+3.3 Building project: mvn clean install
+3.4 Initialize the database: Execute the database initialization SQL file - pharma-core/src/main/resources/sql/pharma-init.sql,
+   Modify the database connection information in application.yaml to your own
+3.5 Running the project: The project is a springboot project, which can be imported into the IDE to run
+   Alternatively, the project can be packaged in a jar file and run from the command line: java - jar {your_target_directory}\pharma-core-1.0.0.jar
 
-四、API Documentation：API接口说明
-1, swagger地址：http://localhost:8081/swagger-ui/index.html
-2, 采用Elide框架自动生成基本的CRUD接口
-3, 自动义了部分接口，例如：根据药房ID查合同药品，创建处方，执行处方
+4、 API Documentation: API Interface Description
+4.1 Swagger address: http://localhost:8081/swagger-ui/index.html
+4.2 Using the Elide framework to automatically generate basic CRUD interfaces
+4.3 Automatically defined some interfaces, such as checking contract drugs based on pharmacy ID, creating prescriptions, and executing prescriptions
 
-五、Systems Design：系统设计
-1, ER图：pharma-core/src/main/resources/DB-ER/ER图.png
-2, 引入低代码框架Elide，省去了部分Controller和Service类
-3, 所有接口符合JSON:API风格，定义了统一的返回对象，统一的业务异常类BizException，异常错误码枚举类，并且将这些公共对象独立成pharma-common包
-4, 采用数据库乐观锁控制处方的并发执行，保证药品库存更新正确，已经处方正确执行
-5, 采用spring的Event事件机制，记录审计日志
+5、 Systems Design: System Design
+5.1 Table diagram: pharma-core/src/main/resources/DB-ER/Table-Diagram.png
+5.2 Introducing the low code framework Elide, which eliminates some Controller and Service classes
+5.3 All interfaces comply with JSON:API style, define a unified return object, a unified business exception class BizException, an exception error code enumeration class, and separate these public objects into pharmaceutical common packages
+5.4 Adopt database optimistic lock to control the concurrent execution of prescriptions, ensuring that drug inventory is updated correctly and prescriptions are executed correctly
+5.5 Adopt Spring's Event event mechanism to record audit logs

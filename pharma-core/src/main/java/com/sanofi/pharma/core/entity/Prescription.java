@@ -24,34 +24,34 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Include(name = "prescription")
-@Schema(description = "处方主表")
+@Schema(description = "prescription table")
 public class Prescription extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
     /**
-     * 所属药房ID
+     * pharmacy id
      */
-    @Schema(description = "所属药房ID")
+    @Schema(description = "pharmacy id")
     private Long pharmacyId;
 
     /**
-     * 患者id
+     * patient id
      */
-    @Schema(description = "患者id")
+    @Schema(description = "patient id")
     private Long patientId;
 
     /**
-     * 状态(0:未处理,1:配药成功,2:配药失败)
+     * status (0: Not executed, 1: drug dispensed successfully, 2: drug dispensed failed)
      */
-    @Schema(description = "状态(0:未执行,1:配药成功,2:配药失败)")
+    @Schema(description = "status (0: Not executed, 1: drug dispensed successfully, 2: drug dispensed failed)")
     private Integer status;
 }
