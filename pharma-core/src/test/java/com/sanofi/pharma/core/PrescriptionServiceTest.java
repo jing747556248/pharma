@@ -32,13 +32,13 @@ public class PrescriptionServiceTest extends ElideTestBase {
         PrescriptionItemDTO itemDTO = new PrescriptionItemDTO();
         itemDTO.setDrugId(1L);
         itemDTO.setQuantity(6);
-        itemDTO.setDosage("一日一次");
+        itemDTO.setDosage("Once a day");
         list.add(itemDTO);
 
         PrescriptionItemDTO itemDTO1 = new PrescriptionItemDTO();
         itemDTO1.setDrugId(2L);
         itemDTO1.setQuantity(7);
-        itemDTO1.setDosage("一日一次");
+        itemDTO1.setDosage("Twice a day");
         list.add(itemDTO1);
 
         dto.setItemDTOList(list);
@@ -57,7 +57,7 @@ public class PrescriptionServiceTest extends ElideTestBase {
         AtomicInteger counter = new AtomicInteger(0); // 计数器
         // 业务方法参数
         FulfillPrescriptionRequestDTO dto = new FulfillPrescriptionRequestDTO();
-        dto.setPrescriptionId(5L);
+        dto.setPrescriptionId(6L);
         for (int i = 0; i < THREAD_COUNT; i++) {
             new Thread(() -> {
                 try {
