@@ -24,53 +24,53 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Include(name = "auditLog")
-@Schema(description = "处方审计日志表")
+@Schema(description = "audit log table")
 public class AuditLog extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
     /**
-     * 处方ID
+     * prescription id
      */
-    @Schema(description = "处方ID")
+    @Schema(description = "prescription id")
     private Long prescriptionId;
 
     /**
-     * 患者ID
+     * patient id
      */
-    @Schema(description = "患者ID")
+    @Schema(description = "patient id")
     private Long patientId;
 
     /**
-     * 药房ID
+     * pharmacy id
      */
-    @Schema(description = "药房ID")
+    @Schema(description = "pharmacy id")
     private Long pharmacyId;
 
     /**
-     * 所需药品JSON数组
+     * required drugs json
      */
-    @Schema(description = "所需药品JSON数组")
+    @Schema(description = "required drug list json")
     private String requiredDrugs;
 
     /**
-     * 配药状态(1:配药成功,2:配药失败)
+     * Dispensed status (1: successful dispensed, 2: failed dispensed)
      */
-    @Schema(description = "配药状态(1:配药成功,2:配药失败)")
+    @Schema(description = "Dispensed status (1: successful dispensed, 2: failed dispensed)")
     private Integer dispensedStatus;
 
     /**
-     * 失败原因
+     * failure reason
      */
-    @Schema(description = "失败原因")
+    @Schema(description = "failure reason")
     private String failureReason;
 
 }

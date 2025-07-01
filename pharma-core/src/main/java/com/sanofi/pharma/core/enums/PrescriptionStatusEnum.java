@@ -7,11 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PrescriptionStatusEnum {
 
-    NOT_FULFILL(0, "未执行"),
+    NOT_FULFILL(0, "not fulfill"),
 
-    FULFILL_SUCCESS(1, "配药成功"),
+    FULFILL_SUCCESS(1, "dispensed success"),
 
-    FULFILL_FAIL(2, "配药失败")
+    FULFILL_FAIL(2, "dispensed fail")
     ;
     private final Integer code;
 

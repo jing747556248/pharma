@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @author lijin
  * @since 2025-06-19
  */
-@Schema(description = "处方管理")
+@Schema(description = "prescription controller")
 @RequestMapping("/api/prescription")
 @RestController
 public class PrescriptionController {
@@ -23,13 +23,13 @@ public class PrescriptionController {
     private PrescriptionService prescriptionService;
 
     @PostMapping(value = "/create")
-    @Schema(description = "创建处方")
+    @Schema(description = "create prescription")
     public RespBody<Prescription> createPrescription(@RequestBody PrescriptionDTO request) {
         return RespBody.ok(prescriptionService.createPrescription(request));
     }
 
     @PostMapping(value = "/fulfill")
-    @Schema(description = "执行处方")
+    @Schema(description = "fulfill prescription")
     public RespBody<Boolean> fulfillPrescription(@RequestBody FulfillPrescriptionRequestDTO request) {
         return RespBody.ok(prescriptionService.fulfillPrescription(request));
     }

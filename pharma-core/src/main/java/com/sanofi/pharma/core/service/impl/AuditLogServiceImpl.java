@@ -29,11 +29,11 @@ public class AuditLogServiceImpl implements AuditLogService {
 
     @Override
     public Page<AuditLog> queryAuditLog(Long patientId, Long pharmacyId, Integer dispensedStatus, Integer pageNum, Integer pageSize) {
-        // 分页查询
+        // query by page
         Specification<AuditLog> specification = Specification
                 .where(AuditLogSpecification.filter(patientId, pharmacyId, dispensedStatus));
 
-        Sort sort = Sort.by(Sort.Order.desc("id")); // id倒序
+        Sort sort = Sort.by(Sort.Order.desc("id")); // id desc
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
         Page<AuditLog> auditLogPage = auditLogRepository.findAll(specification, pageable);
         return auditLogPage;

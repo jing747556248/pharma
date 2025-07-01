@@ -30,7 +30,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.cors(withDefaults());
-        // 关闭csrf
+        // 关闭csrf Close CSRF
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.formLogin(AbstractHttpConfigurer::disable);
         httpSecurity.logout(AbstractHttpConfigurer::disable);

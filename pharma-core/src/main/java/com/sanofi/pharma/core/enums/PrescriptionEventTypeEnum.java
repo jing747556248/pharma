@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PrescriptionEventTypeEnum {
-    // 创建处方
+    // create prescription
     CREATE,
 
-    // 处方执行成功
+    // fulfill success
     FULFILL_SUCCESS,
 
-    // 处方执行失败
+    // fulfill fail
     FULFILL_FAIL
 }

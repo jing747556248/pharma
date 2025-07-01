@@ -24,41 +24,41 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Include(name = "patient")
-@Schema(description = "患者信息表")
+@Schema(description = "patient table")
 public class Patient extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
     /**
-     * 患者姓名
+     * patient name
      */
-    @Schema(description = "患者姓名")
+    @Schema(description = "name")
     private String name;
 
     /**
-     * 患者年龄
+     * patient age
      */
-    @Schema(description = "患者年龄")
+    @Schema(description = "age")
     private Integer age;
 
     /**
-     * 性别(0:未知,1:男,2:女)
+     * Gender (0: unknown, 1: male, 2: female)
      */
-    @Schema(description = "性别(0:未知,1:男,2:女)")
+    @Schema(description = "Gender (0: unknown, 1: male, 2: female)")
     private Integer gender;
 
     /**
-     * 联系电话
+     * Contact phone Number
      */
-    @Schema(description = "联系电话")
+    @Schema(description = "Contact phone Number")
     private String contactPhone;
 
 }

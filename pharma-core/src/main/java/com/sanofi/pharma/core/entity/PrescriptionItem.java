@@ -21,42 +21,42 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Include(name = "prescriptionItem")
-@Schema(description = "处方明细表")
+@Schema(description = "prescription item table")
 public class PrescriptionItem extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
 
     /**
-     * 处方ID
+     * prescription id
      */
-    @Schema(description = "处方ID")
+    @Schema(description = "prescription id")
     private Long prescriptionId;
 
     /**
-     * 药品ID
+     * drug id
      */
-    @Schema(description = "药品ID")
+    @Schema(description = "drug id")
     private Long drugId;
 
     /**
-     * 数量
+     * quantity
      */
-    @Schema(description = "数量")
+    @Schema(description = "quantity")
     private Integer quantity;
 
     /**
-     * 用法用量(如:每日2次,每次1片)
+     * Usage and dosage (e.g. 1 tablet, 2 times a day)
      */
-    @Schema(description = "用法用量(如:每日2次,每次1片)")
+    @Schema(description = "Usage and dosage (e.g. 1 tablet, 2 times a day)")
     private String dosage;
 
 

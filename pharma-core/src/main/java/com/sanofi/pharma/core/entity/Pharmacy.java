@@ -24,41 +24,41 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Include(name = "pharmacy")
-@Schema(description = "药房信息表")
+@Schema(description = "pharmacy table")
 public class Pharmacy extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
     /**
-     * 药房名称
+     * pharmacy name
      */
-    @Schema(description = "药房名称")
+    @Schema(description = "name")
     private String name;
 
     /**
-     * 详细地址
+     * detail address
      */
-    @Schema(description = "详细地址")
+    @Schema(description = "location")
     private String location;
 
     /**
-     * 联系电话
+     * Contact Number
      */
-    @Schema(description = "联系电话")
+    @Schema(description = "Contact Number")
     private String contactPhone;
 
     /**
-     * 营业时间
+     * business hours
      */
-    @Schema(description = "营业时间")
+    @Schema(description = "business hours")
     private String businessHours;
 
 }

@@ -26,59 +26,53 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Include(name = "drug")
-@Schema(description = "药物信息表")
+@Schema(description = "drug table")
 public class Drug extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
     /**
-     * 药物名称
+     * drug name
      */
-    @Schema(description = "药物名称")
+    @Schema(description = "name")
     private String name;
 
     /**
-     * 制造商
+     * manufacturer
      */
-    @Schema(description = "制造商")
+    @Schema(description = "manufacturer")
     private String manufacturer;
 
-    /**
-     * 批号
-     */
-    @Schema(description = "批号")
+    @Schema(description = "batch number")
     private String batchNumber;
 
-    /**
-     * 生产日期
-     */
-    @Schema(description = "生产日期")
+    @Schema(description = "production date")
     private String productionDate;
 
     /**
-     * 有效期至
+     * expiry date
      */
-    @Schema(description = "有效期至")
+    @Schema(description = "expiry date")
     private String expiryDate;
 
     /**
-     * 库存数量
+     * stock
      */
-    @Schema(description = "库存数量")
+    @Schema(description = "stock")
     private Integer stock;
 
     /**
-     * 单价(元)
+     * price
      */
-    @Schema(description = "单价(元)")
+    @Schema(description = "price")
     private BigDecimal price;
 
 }

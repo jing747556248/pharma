@@ -23,29 +23,29 @@ import java.io.Serializable;
 @Entity
 @Include(name = "pharmacyDrugRelationship")
 @CreatePermission(expression = PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
-@Schema(description = "药房-药品关联表")
+@Schema(description = "pharmacy drug relationship table")
 public class PharmacyDrugRelationship extends EntityBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键ID
+     * ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "主键ID")
+    @Schema(description = "primary key id")
     private Long id;
 
     /**
-     * 药房ID
+     * pharmacy id
      */
-    @Schema(description = "药房ID")
+    @Schema(description = "pharmacy id")
     private Long pharmacyId;
 
     /**
-     * 药品ID
+     * drug id
      */
-    @Schema(description = "药品ID")
+    @Schema(description = "drug id")
     private Long drugId;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -53,9 +53,9 @@ public class PharmacyDrugRelationship extends EntityBase implements Serializable
     private Drug drug;
 
     /**
-     * 该药房库存量
+     * stock
      */
-    @Schema(description = "该药房库存量")
+    @Schema(description = "stock")
     private Integer stock;
 
     @Version

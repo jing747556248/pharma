@@ -40,10 +40,10 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Override
     public List<DrugInPharmacyVO> getDrugsByPharmacyId(Long pharmacyId, Integer pageNum, Integer pageSize) {
-        // 定义返回对象
+        // define return instance
         List<DrugInPharmacyVO> returnList = new ArrayList<>();
 
-        // 通过pharmacyId分页查询drugId
+        // query pharmacy drug relationship list by page
         Specification<PharmacyDrugRelationship> specification = Specification
                 .where(PharmacyDrugRelationshipSpecification.filter(pharmacyId));
 
@@ -51,10 +51,10 @@ public class PharmacyServiceImpl implements PharmacyService {
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize, sort);
         Page<PharmacyDrugRelationship> relationshipByPage = pharmacyDrugRelationshipRepository.findAll(specification, pageable);
 
-        // 通过drugId列表查询药品
+        // query drug list by drug id
         if (CollectionUtils.isNotEmpty(relationshipByPage.getContent())) {
             List<Long> drugIdList = relationshipByPage.getContent().stream().map(PharmacyDrugRelationship::getDrugId).toList();
-            // 在该药房下，每种药品的库存
+            // Under this pharmacy, the stock of each drug
             Map<Long, Integer> drugStockMap = relationshipByPage.stream().collect(Collectors.toMap(PharmacyDrugRelationship::getDrugId, PharmacyDrugRelationship::getStock));
             List<Drug> drugList = drugRepository.findByIdIn(drugIdList, Boolean.FALSE);
             if (CollectionUtils.isNotEmpty(drugList)) {
