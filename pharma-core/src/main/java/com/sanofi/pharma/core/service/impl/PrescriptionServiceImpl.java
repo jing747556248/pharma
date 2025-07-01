@@ -170,7 +170,8 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
      */
     private Prescription checkParam(FulfillPrescriptionRequestDTO request) {
         log.info("fulfill prescription request: {}", JSON.toJSONString(request));
-        Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
+        // Pessimistic lock, avoid dirty reading
+        Optional<Prescription> prescriptionOptional = prescriptionRepository.findWithLockById(request.getPrescriptionId());
         if (prescriptionOptional.isEmpty()) {
             log.info("create prescription exception: 处方不存在");
             throw new BizException(RespCode.PRESCRIPTION_NOT_EXIST);
@@ -250,7 +251,7 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         // record audit log
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(request.getPrescriptionId());
         List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescriptionOptional.isPresent() ? prescriptionOptional.get().getId() : -1, false);
-        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), prescriptionItemList, e.getRespCode().getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
+        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescriptionOptional.orElse(null), prescriptionItemList, e.getRespCode().getTitle(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
         throw e;
     }
 }
