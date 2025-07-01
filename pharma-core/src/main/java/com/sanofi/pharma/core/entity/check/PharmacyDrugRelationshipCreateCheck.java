@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-//@SecurityCheck(PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
+@SecurityCheck(PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
 @RequiredArgsConstructor
 public class PharmacyDrugRelationshipCreateCheck extends OperationCheck<PharmacyDrugRelationship> {
 
@@ -35,7 +35,7 @@ public class PharmacyDrugRelationshipCreateCheck extends OperationCheck<Pharmacy
     @Lazy
     private final PharmacyRepository pharmacyRepository;
 
-    public static final String CREATE_CHECK = "CREATE_CHECK";
+    public static final String CREATE_CHECK = "CREATE CHECK";
 
     @Override
     public boolean ok(PharmacyDrugRelationship relationship, RequestScope requestScope, Optional<ChangeSpec> changeSpec) {
