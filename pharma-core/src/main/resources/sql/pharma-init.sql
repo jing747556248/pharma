@@ -83,7 +83,7 @@ CREATE TABLE `pharmacy_drug_relationship` (
   `pharmacy_id` bigint NOT NULL COMMENT '药房ID',
   `drug_id` bigint NOT NULL COMMENT '药品ID',
   `stock` int NOT NULL DEFAULT '0' COMMENT '该药房库存量',
-  `version` int DEFAULT NULL COMMENT '数据版本，乐观锁控制并发更新',
+  `version` int NOT NULL DEFAULT '0' COMMENT '数据版本，乐观锁控制并发更新',
   `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_by` varchar(64) DEFAULT NULL COMMENT '最近修改人',

@@ -47,7 +47,7 @@ public class PrescriptionServiceTest extends ElideTestBase {
     }
 
     /**
-     * 执行处方--并发执行
+     * 执行处方--并发执行(对同一个处方)
      */
     @Test
     public void fulfillPrescriptionTest() throws InterruptedException {
@@ -57,7 +57,7 @@ public class PrescriptionServiceTest extends ElideTestBase {
         AtomicInteger counter = new AtomicInteger(0); // 计数器
         // 业务方法参数
         FulfillPrescriptionRequestDTO dto = new FulfillPrescriptionRequestDTO();
-        dto.setPrescriptionId(6L);
+        dto.setPrescriptionId(7L);
         for (int i = 0; i < THREAD_COUNT; i++) {
             new Thread(() -> {
                 try {
