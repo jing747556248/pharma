@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Include(name = "pharmacyDrugRelationship")
-//@CreatePermission(expression = PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
+@CreatePermission(expression = PharmacyDrugRelationshipCreateCheck.CREATE_CHECK)
 @Schema(description = "药房-药品关联表")
 public class PharmacyDrugRelationship extends EntityBase implements Serializable {
 

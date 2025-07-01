@@ -75,7 +75,8 @@ public enum RespCode {
     PRESCRIPTION_HAS_BEEN_FULFILLED("10005", "Prescription Has Been Fulfilled Exception", "处方已经执行过了"),
     DRUG_NOT_EXIST("10006", "Drug Not Exist Exception", "药品不存在"),
     DRUG_HAS_EXPIRED("10007", "Drug Has Expiry Exception", "药品过了有效期"),
-    PHARMACY_NOT_EXIST("10008", "Pharmacy Not Exist Exception", "药房不存在");
+    PHARMACY_NOT_EXIST("10008", "Pharmacy Not Exist Exception", "药房不存在"),
+    PARAM_CAN_NOT_BE_NULL("10009", "Param Can Not Be Null Exception", "参数不能为空");
 
     /**
      * 自定义 返回码
