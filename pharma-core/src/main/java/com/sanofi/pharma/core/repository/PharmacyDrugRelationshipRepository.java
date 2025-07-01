@@ -19,11 +19,6 @@ public interface PharmacyDrugRelationshipRepository extends JpaRepository<Pharma
      */
     PharmacyDrugRelationship findByPharmacyIdAndDrugId(Long pharmacyId, Long drugId);
 
-//    /**
-//     * 批量更新库存
-//     */
-//    @Modifying
-//    @Query(nativeQuery = true)
-//    @Transactional // 使用动态SQL占位符
-//    int batchUpdateStocks(@Param("sql") String sql);
+    @Query("from PharmacyDrugRelationship p where p.pharmacyId = :pharmacyId and p.drugId in (:drugIdList) and p.isDeleted = false ")
+    List<PharmacyDrugRelationship> findByPharmacyIdAndDrugIdIn(@Param("pharmacyId") Long pharmacyId, @Param("drugIdList") List<Long> drugIdList);
 }

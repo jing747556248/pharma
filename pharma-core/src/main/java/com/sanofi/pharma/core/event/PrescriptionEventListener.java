@@ -6,6 +6,7 @@ import com.sanofi.pharma.core.entity.Prescription;
 import com.sanofi.pharma.core.entity.PrescriptionItem;
 import com.sanofi.pharma.core.enums.PrescriptionStatusEnum;
 import com.sanofi.pharma.core.repository.AuditLogRepository;
+import com.sanofi.pharma.core.repository.PrescriptionRepository;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -21,6 +22,9 @@ public class PrescriptionEventListener implements ApplicationListener<Prescripti
 
     @Resource
     private AuditLogRepository auditLogRepository;
+
+    @Resource
+    private PrescriptionRepository prescriptionRepository;
 
     @Override
     public void onApplicationEvent(PrescriptionEvent event) {
@@ -100,5 +104,12 @@ public class PrescriptionEventListener implements ApplicationListener<Prescripti
         auditLog.setUpdateTime(new Date());
         auditLog.setIsDeleted(false);
         auditLogRepository.save(auditLog);
+
+        // update prescription status, 库存不足时，处方执行失败 业务方法有Transactional 无法提交处方状态更新，故放此处
+        if (prescription != null) {
+            prescription.setStatus(PrescriptionStatusEnum.FULFILL_FAIL.getCode());
+            prescription.setUpdateTime(new Date());
+            prescriptionRepository.save(prescription);
+        }
     }
 }
