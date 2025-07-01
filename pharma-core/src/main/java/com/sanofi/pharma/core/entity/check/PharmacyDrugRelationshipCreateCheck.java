@@ -14,7 +14,6 @@ import com.yahoo.elide.core.security.RequestScope;
 import com.yahoo.elide.core.security.checks.OperationCheck;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +38,10 @@ public class PharmacyDrugRelationshipCreateCheck extends OperationCheck<Pharmacy
 
     @Override
     public boolean ok(PharmacyDrugRelationship relationship, RequestScope requestScope, Optional<ChangeSpec> changeSpec) {
+        // 参数不能为空
+        if (relationship.getPharmacyId() == null || relationship.getDrugId() == null) {
+            throw new BizException(RespCode.PARAM_CAN_NOT_BE_NULL);
+        }
         // 检查药品是否存在
         Optional<Drug> drugOptional = drugRepository.findById(relationship.getDrugId());
         if (drugOptional.isEmpty()) {
