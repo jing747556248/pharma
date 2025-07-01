@@ -57,7 +57,7 @@ public class PrescriptionServiceTest extends ElideTestBase {
         AtomicInteger counter = new AtomicInteger(0); // 计数器
         // 业务方法参数
         FulfillPrescriptionRequestDTO dto = new FulfillPrescriptionRequestDTO();
-        dto.setPrescriptionId(7L);
+        dto.setPrescriptionId(11L);
         for (int i = 0; i < THREAD_COUNT; i++) {
             new Thread(() -> {
                 try {
@@ -84,7 +84,7 @@ public class PrescriptionServiceTest extends ElideTestBase {
     public void fulfillTest() {
         // 业务方法参数
         FulfillPrescriptionRequestDTO dto = new FulfillPrescriptionRequestDTO();
-        dto.setPrescriptionId(5L);
+        dto.setPrescriptionId(11L);
         prescriptionService.fulfillPrescription(dto);
     }
 }

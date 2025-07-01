@@ -33,10 +33,8 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -99,39 +97,34 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         // check parma
         Prescription prescription = this.checkParam(request);
 
-        // Deducting stock, updating prescription status with optimistic lock
+        // query prescription item
         List<PrescriptionItem> prescriptionItemList = prescriptionItemRepository.findByPrescriptionIdAndIsDeleted(prescription.getId(), false);
-        List<PharmacyDrugRelationship> pharmacyDrugRelationshipList = new ArrayList<>();
-        boolean isEnough = true;
-        for (PrescriptionItem prescriptionItem : prescriptionItemList) {
-            // query the drug in the pharmacy
-            PharmacyDrugRelationship pharmacyDrugRelationship = pharmacyDrugRelationshipRepository.findByPharmacyIdAndDrugId(prescription.getPharmacyId(), prescriptionItem.getDrugId());
-            // determine if the stock is enough
-            if (pharmacyDrugRelationship.getStock() < prescriptionItem.getQuantity()) {
-                isEnough = false;
-                break;
-            }
-            pharmacyDrugRelationship.setStock(pharmacyDrugRelationship.getStock() - prescriptionItem.getQuantity());
-            pharmacyDrugRelationship.setUpdateTime(new Date());
-            pharmacyDrugRelationshipList.add(pharmacyDrugRelationship);
-        }
+        Map<Long, Integer> itemMap = prescriptionItemList.stream().collect(Collectors.toMap(PrescriptionItem::getDrugId, PrescriptionItem::getQuantity));
 
-        if (isEnough) {
-            // batch update pharmacy stock
-            this.batchUpdateStock(pharmacyDrugRelationshipList);
+        // query the drugs included in the prescription
+        List<PharmacyDrugRelationship> pharmacyDrugRelationshipList = pharmacyDrugRelationshipRepository.findByPharmacyIdAndDrugIdIn(prescription.getPharmacyId(), prescriptionItemList.stream().map(PrescriptionItem::getDrugId).toList());
 
-            // update prescription status
-            prescription.setStatus(PrescriptionStatusEnum.FULFILL_SUCCESS.getCode());
-            prescription.setUpdateTime(new Date());
-            prescriptionRepository.save(prescription);
-
-            // record audit log
-            applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, prescriptionItemList, "", PrescriptionEventTypeEnum.FULFILL_SUCCESS.toString()));
-        } else {
+        // determine if the stock is enough
+        if (pharmacyDrugRelationshipList.stream().anyMatch(stock -> itemMap.get(stock.getDrugId()) > stock.getStock())) {
             // record audit log
             applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, prescriptionItemList, RespCode.PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH.getDetail(), PrescriptionEventTypeEnum.FULFILL_FAIL.toString()));
-            throw new BizException(RespCode.PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH);
+            throw new BizException(RespCode.PRESCRIPTION_DRUG_QUANTITY_NOT_ENOUGH); // 库存不足
         }
+
+        // batch update pharmacy stock with optimistic lock
+        pharmacyDrugRelationshipList.stream().forEach(p -> {
+            p.setStock(p.getStock() - itemMap.get(p.getDrugId()));
+            p.setUpdateTime(new Date());
+        });
+        pharmacyDrugRelationshipRepository.saveAll(pharmacyDrugRelationshipList);
+
+        // update prescription status
+        prescription.setStatus(PrescriptionStatusEnum.FULFILL_SUCCESS.getCode());
+        prescription.setUpdateTime(new Date());
+        prescriptionRepository.save(prescription);
+
+        // record audit log
+        applicationEventPublisher.publishEvent(new PrescriptionEvent(this, prescription, prescriptionItemList, "", PrescriptionEventTypeEnum.FULFILL_SUCCESS.toString()));
         return Boolean.TRUE;
     }
 
@@ -215,17 +208,17 @@ public class PrescriptionServiceImpl implements PrescriptionService, Application
         return prescriptionItemList;
     }
 
-    private void batchUpdateStock(List<PharmacyDrugRelationship> pharmacyDrugRelationshipList) {
+    private void batchUpdateStock(List<PharmacyDrugRelationship> pharmacyDrugRelationshipList, Map<Long, Integer> itemMap) {
         List<Long> ids = pharmacyDrugRelationshipList.stream().map(PharmacyDrugRelationship::getId).toList();
         // 动态构建SQL
         StringBuilder sqlBuilder = new StringBuilder(
                 "UPDATE pharmacy_drug_relationship SET stock = CASE id "
         );
-        pharmacyDrugRelationshipList.forEach(pharmacyDrugRelationship -> {
+        pharmacyDrugRelationshipList.forEach(p -> {
             sqlBuilder.append("WHEN ")
-                    .append(pharmacyDrugRelationship.getId())
+                    .append(p.getId())
                     .append(" THEN ")
-                    .append(pharmacyDrugRelationship.getStock())
+                    .append(p.getStock() - itemMap.get(p.getDrugId()))
                     .append(" ");
         });
         sqlBuilder.append("END WHERE id IN :ids");
