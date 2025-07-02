@@ -36,7 +36,7 @@ mvn clean install
 
 - Initialize the database
 
-[Execute scripts in MySQL database]: pharma-core/src/main/resources/sql/pharma-init.sql
+> ./pharma-core/src/main/resources/sql/pharma-init.sql
 
 - Running the project
 
@@ -142,7 +142,7 @@ curl -X 'POST' \
 
 > ./pharma-core/src/main/resources/DB-ER/Table-Diagram.png
 
-![Table-Diagram](./pharma-core/src/main/resources/DB-ER/Table-Diagram.png)
+![Table-Diagram](D:\sanofi\code\pharma\pharma-core\src\main\resources\DB-ER\Table-Diagram.png)
 
 
 
