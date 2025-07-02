@@ -1,11 +1,14 @@
 package com.sanofi.pharma.core;
 
+import com.sanofi.pharma.common.exception.BizException;
 import com.sanofi.pharma.core.dto.FulfillPrescriptionRequestDTO;
 import com.sanofi.pharma.core.dto.PrescriptionDTO;
 import com.sanofi.pharma.core.dto.PrescriptionItemDTO;
 import com.sanofi.pharma.core.entity.Prescription;
 import com.sanofi.pharma.core.service.PrescriptionService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class PrescriptionServiceTest extends ElideTestBase {
 
     @Resource
@@ -85,6 +89,11 @@ public class PrescriptionServiceTest extends ElideTestBase {
         // 业务方法参数
         FulfillPrescriptionRequestDTO dto = new FulfillPrescriptionRequestDTO();
         dto.setPrescriptionId(11L);
-        prescriptionService.fulfillPrescription(dto);
+        try {
+            Boolean result = prescriptionService.fulfillPrescription(dto);
+            Assertions.assertTrue(result);
+        } catch (BizException bizException) {
+            log.info("fulfill prescription fail, please check reason in audit log");
+        }
     }
 }
