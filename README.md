@@ -140,6 +140,6 @@ curl -X 'POST' \
 
 ## Database Table Diagram
 
-> ./pharma-core/src/main/resources/DB-ER/Table-Diagram.png
-
+```
 ![Table-Diagram](./pharma-core/src/main/resources/DB-ER/Table-Diagram.png)
+```
