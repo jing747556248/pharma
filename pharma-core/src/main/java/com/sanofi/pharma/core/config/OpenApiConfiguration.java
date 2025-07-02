@@ -16,7 +16,7 @@ public class OpenApiConfiguration {
 	            .group("elide")
 	            .pathsToMatch("/**")
 				.displayName("elide自动生成")
-				.packagesToExclude("com.sanofi.pharma.controller")
+				.packagesToExclude("com.sanofi.pharma.core.controller")
 	            .build();
 	}
 
