@@ -142,7 +142,7 @@ curl -X 'POST' \
 
 > ./pharma-core/src/main/resources/DB-ER/Table-Diagram.png
 
-![Table-Diagram](D:\sanofi\code\pharma\pharma-core\src\main\resources\DB-ER\Table-Diagram.png)
+![Table-Diagram](./pharma-core/src/main/resources/DB-ER/Table-Diagram.png)
 
 
 
