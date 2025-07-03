@@ -16,7 +16,7 @@ public class OpenApiConfiguration {
 	            .group("elide")
 	            .pathsToMatch("/**")
 				.displayName("elide自动生成")
-				.packagesToExclude("com.sanofi.pharma.controller")
+				.packagesToExclude("com.sanofi.pharma.core.controller")
 	            .build();
 	}
 
@@ -25,7 +25,7 @@ public class OpenApiConfiguration {
 	public GroupedOpenApi apiV2() {
 		return GroupedOpenApi.builder()
 				.group("manualModeApi")
-				.packagesToScan("com.sanofi.pharma.controller")
+				.packagesToScan("com.sanofi.pharma.core.controller")
 				.displayName("手写API（非elide生成）")
 				.build();
 	}
