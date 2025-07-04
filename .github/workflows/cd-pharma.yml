@@ -8,13 +8,11 @@ on:
         required: true
         type: boolean
       environment:
-        description: 'Select the environment to deploy to (uat, develop, prod)'
+        description: 'Select the environment to deploy to'
         required: false  # Optional environment input
         type: choice
         options:
-          - uat
-          - os_develop
-          - prod
+          - dev
   push:
     branches: [ "main" ]
 
