@@ -1,6 +1,20 @@
 name: Docker Build & Deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Do you want to update the Deployment?'
+        required: true
+        type: boolean
+      environment:
+        description: 'Select the environment to deploy to (uat, develop, prod)'
+        required: false  # Optional environment input
+        type: choice
+        options:
+          - uat
+          - os_develop
+          - prod
   push:
     branches: [ "main" ]
 
