@@ -18,8 +18,8 @@ on:
 
 env:
   DOCKER_IMAGE: your-dockerhub-username/java-app
-  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD:root }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD:root }}
+  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
 jobs:
   build-and-deploy:
