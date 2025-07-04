@@ -18,15 +18,16 @@ on:
 
 env:
   DOCKER_IMAGE: your-dockerhub-username/java-app
-  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD:root }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD:root }}
 
 jobs:
   build-and-deploy:
     runs-on: [ self-hosted ]
     steps:
       # 1. 检出代码
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       # 2. 设置JDK环境
       - name: Set up JDK 17
@@ -35,11 +36,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 5. 构建Docker镜像
+      # 3. 构建Docker镜像
       - name: Build Docker image
         run: docker build -t java-app:latest .
 
-      # 6. 部署到阿里云ECS
+      # 4. 部署到阿里云ECS
       - name: Deploy to Aliyun ECS
         uses: appleboy/ssh-action@v0.1.10
         with:
