@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mysql:
+    build: ./mysql
+    container_name: mysql_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: pharma
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql_data:

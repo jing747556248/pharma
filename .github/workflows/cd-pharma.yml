@@ -1,0 +1,56 @@
+name: Docker Build & Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  DOCKER_IMAGE: your-dockerhub-username/java-app
+  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 检出代码
+      - uses: actions/checkout@v3
+
+      # 2. 设置JDK环境
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 5. 构建Docker镜像
+      - name: Build Docker image
+        run: docker build -t java-app:latest .
+
+      # 6. 部署到阿里云ECS
+      - name: Deploy to Aliyun ECS
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 传输Docker镜像
+            docker save java-app:latest | gzip > java-app.tar.gz
+            scp -o StrictHostKeyChecking=no java-app.tar.gz ${{ secrets.ECS_USERNAME }}@${{ secrets.ECS_HOST }}:/tmp/
+            ssh ${{ secrets.ECS_USERNAME }}@${{ secrets.ECS_HOST }} "
+              # 加载镜像并启动容器
+              docker load -i /tmp/java-app.tar.gz
+              docker stop java-app || true
+              docker rm java-app || true
+              docker run -d \
+                --name java-app \
+                --network app_network \
+                -p 8080:8080 \
+                -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/app_db \
+                -e SPRING_DATASOURCE_USERNAME=app_user \
+                -e SPRING_DATASOURCE_PASSWORD=${{ env.DB_PASSWORD }} \
+                java-app:latest
+              rm /tmp/java-app.tar.gz
+            "
+            rm java-app.tar.gz
