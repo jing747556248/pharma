@@ -1,4 +1,5 @@
 HELP.md
+mvnw.cmd
 target/
 .mvn/wrapper/maven-wrapper.jar
 pharma-core/.mvn/wrapper/maven-wrapper.properties
