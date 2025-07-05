@@ -1,5 +1,5 @@
 # 第一阶段：构建阶段
-FROM maven:3.9.3-eclipse-temurin-17 AS build
+FROM maven:3.8-jdk-17 AS builder
 WORKDIR /app
 COPY pom.xml .
 # 先下载依赖(利用Docker层缓存)
@@ -10,7 +10,7 @@ RUN mvn clean package -DskipTests
 
 
 # 第二阶段：运行阶段
-FROM eclipse-temurin:17-jre-jammy
+FROM openjdk:17-jre-alpine
 WORKDIR /app
 # 从构建阶段复制jar包
 COPY --from=build /app/target/*.jar app.jar
