@@ -30,16 +30,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. 设置JDK环境
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+#      # 2. 设置JDK环境
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '17'
+#          distribution: 'temurin'
 
       # 3. 构建Docker镜像
       - name: Build Docker image
-        run: docker build -t java-app:latest .
+        run: |
+          docker build -t java-app .
+          docker save java-app > java-app.tar
 
       # 4. 部署到阿里云ECS
       - name: Deploy to Aliyun ECS

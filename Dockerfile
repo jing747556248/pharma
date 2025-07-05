@@ -1,14 +1,19 @@
-# 第一阶段：构建应用
-FROM eclipse-temurin:17.0.12_7-jre
+# 第一阶段：构建阶段
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
+# 先下载依赖(利用Docker层缓存)
+RUN mvn dependency:go-offline
 COPY src ./src
+# 执行构建
 RUN mvn clean package -DskipTests
 
-# 第二阶段：运行应用
-#FROM openjdk:11-jre-slim
-#WORKDIR /app
-COPY --from=build /app/target/pharma-core-1.0.0.jar ./app.jar
+
+# 第二阶段：运行阶段
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+# 从构建阶段复制jar包
+COPY --from=build /app/target/*.jar app.jar
 
 # 暴露端口(根据你的应用调整)
 EXPOSE 8081
